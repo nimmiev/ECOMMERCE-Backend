@@ -30,8 +30,8 @@ const corsOptionsDelegate = function (req, callback) {
 app.use(cors(corsOptionsDelegate));
 
 app.use(express.json())
-app.use("/", productRouter)
-app.use("/user", userRouter)
+app.use("/", productRouter);
+app.use("/user", userRouter);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
