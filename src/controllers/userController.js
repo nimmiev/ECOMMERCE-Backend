@@ -1,5 +1,5 @@
 const UserModel = require('../models/userModel')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken');
 
 const saltRounds = 10
@@ -31,14 +31,22 @@ const LoginController = (req, res) => {
     const email = req.body.email
     UserModel.findOne({email: email})
     .then((user) => {
-        // console.log(user)
         if(user) {
-            res.status(201).json({message: 'User logged in'})
+            console.log(user)
+            
+            bcrypt.compare(req.body.password, user.password, function(err, isMatch) {
+                if (err) throw err;
+                if (isMatch) {
+                    var token = jwt.sign({ email: email }, secretKey);
+                    res.status(200).json({message: 'User logged in', token: token})
+                } else {
+                    res.status(400).json({message: 'Invalid password, try again'})
+                }
+            })
         }else{
-            res.status(400).json({message: 'Invalid emaili id, try again'})
+            res.status(400).json({message: 'Invalid email, try again'})
         }
     })
-    var token = jwt.sign({ email: email }, secretKey);
 }
 
 module.exports = {CreateUserController, LoginController}
