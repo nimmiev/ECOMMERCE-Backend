@@ -24,14 +24,16 @@ main()
 const allowlist = list.split(',');
 const corsOptionsDelegate = (req, callback) => {
     const origin = req.header('Origin');
-    const corsOptions = allowlist.includes(origin)
-        ? { origin: true }
-        : { origin: false };
+    const corsOptions = {
+        origin: origin && allowlist.includes(origin), // Allow if origin exists and is in the allowlist
+        credentials: true, // Include cookies if needed
+    };
     console.log(`Origin: ${origin} - Allowed: ${corsOptions.origin}`);
     callback(null, corsOptions);
 };
 
-app.use(cors(corsOptionsDelegate));
+
+app.options('*', cors(corsOptionsDelegate))
 
 app.use(express.json())
 app.use("/", productRouter);
