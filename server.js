@@ -1,14 +1,16 @@
+require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
 const app = express()
 const productRouter = require('./src/routes/productRouter')
 const userRouter = require('./src/routes/userRouter')
 const ProductModel = require('./src/models/productModel')
-const port = 3000
+const port = process.env.PORT || 3000
 const cors = require('cors')
 
 async function main() {
-    await mongoose.connect('mongodb+srv://nimmiev222:wRUcJUdKKRwPNGvm@ecommerce.gff06.mongodb.net/?retryWrites=true&w=majority&appName=Ecommerce')}
+    await mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+}
 
 main()
 .then(() => {
@@ -17,13 +19,13 @@ main()
 .catch(err => console.log(err))
 
 // CORS setup
-const allowlist = ['http://localhost:5173', 'http://127.0.0.1:5173'];
+const allowlist = process.env.ALLOWLIST.split(',');
 const corsOptionsDelegate = function (req, callback) {
-  const corsOptions = allowlist.includes(req.header('Origin'))
-    ? { origin: true } // Allow listed origins
-    : { origin: false }; // Block other origins
-  callback(null, corsOptions);
-};
+    const corsOptions = allowlist.includes(req.header('Origin'))
+        ? { origin: true } // Allow listed origins
+        : { origin: false }; // Block other origins
+    callback(null, corsOptions);
+}
 
 app.use(cors(corsOptionsDelegate));
 
