@@ -22,7 +22,7 @@ main()
 
 // CORS setup
 // CORS setup
-const allowlist = ['http://localhost:5173', 'http://127.0.0.1:5173'];
+const allowlist = ['http://localhost:5173', 'http://127.0.0.1:5173', 'https://ecommerce-frontend-theta-flax.vercel.app/'];
 const corsOptionsDelegate = function (req, callback) {
   const corsOptions = allowlist.includes(req.header('Origin'))
     ? { origin: true } // Allow listed origins
