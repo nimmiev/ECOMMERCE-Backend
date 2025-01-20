@@ -8,7 +8,6 @@ const cartRouter = require('./src/routes/cartRouter')
 const ProductModel = require('./src/models/productModel')
 const cors = require('cors')
 const port = process.env.PORT || 3000
-const list = process.env.ALLOWLIST || 'https://ecommerce-frontend-theta-flax.vercel.app';
 
 
 async function main() {
@@ -22,17 +21,16 @@ main()
 .catch(err => console.log(err));
 
 // CORS setup
-const allowlist = ['http://localhost:5173','http://127.0.0.1:5173','https://ecommerce-frontend-theta-flax.vercel.app'];
+// CORS setup
+const allowlist = ['http://localhost:5173', 'http://127.0.0.1:5173'];
 const corsOptionsDelegate = function (req, callback) {
-    const corsOptions = allowlist.includes(req.header('Origin'))
-        ? { origin: true } // Allow listed origins
-        : { origin: false }; // Block other origins
-    callback(null, corsOptions);
+  const corsOptions = allowlist.includes(req.header('Origin'))
+    ? { origin: true } // Allow listed origins
+    : { origin: false }; // Block other origins
+  callback(null, corsOptions);
 };
 
-
-app.options('*', cors(corsOptionsDelegate))
-
+app.use(cors(corsOptionsDelegate));
 app.use(express.json())
 app.use("/", productRouter);
 app.use("/user", userRouter);
